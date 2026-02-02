@@ -1,0 +1,56 @@
+name: Manifest Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install web-ext (Firefox Validator)
+      run: npm install --global web-ext
+    
+    - name: Validate Manifest
+      run: web-ext lint --source-dir . --warnings-as-errors
+    
+    - name: Check File Structure
+      run: |
+        echo "Checking required files..."
+        test -f manifest.json || (echo "ERROR: manifest.json missing" && exit 1)
+        test -f vision_engine.js || (echo "ERROR: vision_engine.js missing" && exit 1)
+        test -f background.js || (echo "ERROR: background.js missing" && exit 1)
+        test -f README.md || (echo "ERROR: README.md missing" && exit 1)
+        test -f LICENSE || (echo "ERROR: LICENSE missing" && exit 1)
+        echo "✅ All required files present"
+    
+    - name: Validate JSON Syntax
+      run: |
+        echo "Checking manifest.json syntax..."
+        jq empty manifest.json || (echo "ERROR: Invalid JSON in manifest.json" && exit 1)
+        echo "✅ manifest.json is valid JSON"
+    
+    - name: Check JavaScript Syntax
+      run: |
+        echo "Checking JavaScript syntax..."
+        node -c vision_engine.js
+        node -c background.js
+        echo "✅ JavaScript syntax is valid"
+    
+    - name: Summary
+      if: success()
+      run: |
+        echo "================================================"
+        echo "✅ All validation checks passed!"
+        echo "================================================"

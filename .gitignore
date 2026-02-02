@@ -1,0 +1,46 @@
+# Editor Directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Wiki Staging (Deploy to Wiki repo separately)
+wiki_staging/
+
+# Build Artifacts (if you later add build tools)
+dist/
+build/
+*.zip
+*.xpi
+*.crx
+
+# Node.js (if you add linting tools)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Browser Extension Development
+web-ext-artifacts/
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS Files
+Thumbs.db
+.DS_Store
+
+# Temporary Files
+*.tmp
+*.bak
+temp/
+tmp/
+
+# Environment Variables (if you add build scripts)
+.env
+.env.local
